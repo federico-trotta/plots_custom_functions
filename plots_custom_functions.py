@@ -48,7 +48,7 @@ def plot_kde(y_test, y_test_pred):
     sns.kdeplot(y_test_pred, color='b', label='Predicted Values', ax=ax) #predicted values
 
     #showing title
-    plt.title('Actual vs Precited values')
+    plt.title('Actual vs Predicted values')
     #showing legend
     plt.legend()
     #showing plot
@@ -123,7 +123,29 @@ def plot_residuals(y_test, y_test_pred, title, x_label, y_label):
 # In[ ]:
 
 
+## LEARNING CURVES
 
+#coding the learning curves
+def plot_learning_curves(model, X, y):
+    '''
+    before invoking it, fix a seed. The typical value is seed=42.
+    Aftter that, invoke the function like so:
+    
+    #plotting
+    plot_learning_curves(your model, X, y) #"your model" is the model you selected
+    
+    then, invoke the "get_label" function
+    '''
+    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=seed)
+    train_errors, val_errors = [], []
+    for m in range(1, len(X_train)):
+        model.fit(X_train[:m], y_train[:m])
+        y_train_predict = model.predict(X_train[:m])
+        y_val_predict = model.predict(X_val)
+        train_errors.append(mean_squared_error(y_train_predict, y_train[:m]))
+        val_errors.append(mean_squared_error(y_val_predict, y_val))
+    plt.plot(np.sqrt(train_errors), 'r-+', linewidth=2, label='train')
+    plt.plot(np.sqrt(val_errors), 'b-', linewidth=3, label='val')
 
 
 # # PRINT DOCUMENTATION
@@ -135,6 +157,7 @@ print(get_label.__doc__)
 print(plot_kde.__doc__)
 print(scatter_with_regr.__doc__)
 print(plot_residuals.__doc__)
+print(plot_learning_curves.__doc__)
 
 
 # In[ ]:
